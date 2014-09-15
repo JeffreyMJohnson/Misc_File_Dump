@@ -1,6 +1,7 @@
 ﻿#include "AIE.h"
 #include <iostream>
 #include <time.h>
+#include <string>
 
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;
@@ -34,6 +35,25 @@ enum DIRECTION
 	DOWN
 };
 
+enum GAMESTATE
+{
+	MENU,
+	PLAY,
+	HIGH_SCORE,
+	WIN,
+	QUIT
+};
+
+GAMESTATE currentGameState;
+
+enum PLAY_STATE
+{
+	SERVE,
+	ROUND
+};
+
+PLAY_STATE currentPlayState;
+
 void InitializeGame();
 
 void Update();
@@ -47,6 +67,8 @@ void DrawUI();
 void drawCenterLine();
 
 void InitializeBall();
+
+
 
 DIRECTION GetRandXDirection();
 
@@ -112,6 +134,14 @@ struct Player
 	{
 		score += a_score;
 	}
+
+	void GetScore(char* a_result)
+	{
+		//char result[3];
+		itoa(score, a_result, 10);
+		std::cout << a_result << std::endl;
+		//return result;
+	}
 };
 
 Player player1;
@@ -168,9 +198,9 @@ struct Ball
 
 	bool IsPlayer1Collision()
 	{
-		if (x - width /2 <= player1.x + player1.width / 2 && 
-			x - width /2 >= player1.x - player1.width / 2 &&
-			y - height <= player1.y + player1.height / 2 && 
+		if (x - width / 2 <= player1.x + player1.width / 2 &&
+			x - width / 2 >= player1.x - player1.width / 2 &&
+			y - height <= player1.y + player1.height / 2 &&
 			y + height >= player1.y - player1.height / 2)
 		{
 			return true;
@@ -180,9 +210,9 @@ struct Ball
 
 	bool IsPlayer2Collision()
 	{
-		if (x + width /2 >= player2.x - player2.width / 2 && 
-			x - width /2 <= player2.x + player2.width / 2 &&
-			y <= player2.y + player2.height / 2 && 
+		if (x + width / 2 >= player2.x - player2.width / 2 &&
+			x - width / 2 <= player2.x + player2.width / 2 &&
+			y <= player2.y + player2.height / 2 &&
 			y >= player2.y - player2.height / 2)
 		{
 			return true;
@@ -250,6 +280,7 @@ struct Ball
 			if (x <= 0)
 			{
 				player2.AddScore(1);
+				currentPlayState = SERVE;
 			}
 		}
 		else
@@ -257,6 +288,7 @@ struct Ball
 			if (x >= SCREEN_WIDTH)
 			{
 				player1.AddScore(1);
+				currentPlayState = SERVE;
 			}
 		}
 	}
@@ -277,8 +309,35 @@ int main(int argc, char* argv[])
 	do
 	{
 		ClearScreen();
-		Update();
-		Draw();
+
+		//implement gamestates
+		switch (currentGameState)
+		{
+		case MENU:
+			break;
+		case PLAY:
+			//implement play states
+			switch (currentPlayState)
+			{
+			case SERVE:
+				currentPlayState = ROUND;
+				break;
+			case ROUND:
+				Update();
+				Draw();
+				break;
+			}
+
+
+			break;
+		case HIGH_SCORE:
+			break;
+		case QUIT:
+			break;
+		}
+
+
+
 	} while (!FrameworkUpdate());
 
 	Shutdown();
@@ -289,6 +348,9 @@ int main(int argc, char* argv[])
 
 void InitializeGame()
 {
+	currentGameState = PLAY;
+	currentPlayState = SERVE;
+
 	InitializePlayers();
 
 	InitializeBall();
@@ -315,8 +377,10 @@ void Update()
 void DrawUI()
 {
 	drawCenterLine();
-	DrawString(PLAYER1_SCORE, PLAYER1_SCORE_POSX, PLAYER1_SCORE_POSY);
-	DrawString(PLAYER2_SCORE, PLAYER2_SCORE_POSX, PLAYER2_SCORE_POSY);
+	char player1Score[3];
+	player1.GetScore(player1Score);
+	DrawString(player1Score , PLAYER1_SCORE_POSX, PLAYER1_SCORE_POSY);
+	DrawString("0", PLAYER2_SCORE_POSX, PLAYER2_SCORE_POSY);
 }
 
 void drawCenterLine()
@@ -414,3 +478,4 @@ DIRECTION GetRandomYDirection()
 		return DOWN;
 	}
 }
+
