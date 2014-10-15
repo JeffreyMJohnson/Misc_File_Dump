@@ -15,42 +15,29 @@ int main(int argc, char* argv[])
 	SetBackgroundColour(SColour(0, 0, 0, 255));
 	float xPos = maxWidth * 0.5f;
 	float yPos = maxHeight * 0.5f;
-	int myTextureHandle = CreateSprite("./images/crate_sideup.png", 100, 100, false);
+	int myTextureHandle = CreateSprite("./images/ship_destory_spritesheet.png", 511 / 6.0f, 106, true);
 	int direction = 1;
 
-	float radius = 100.0f;
-	float angle = 90.0f;
-	float angleInRadians = angle * (180 / PI);
-
+	int count = .001;
+	float timer = 1.0;
+	float animTimer = timer;
+	SetSpriteUVCoordinates(myTextureHandle, 0.0f, 0.0f, 52.0f / 511.0f, 1.0f);
 	//Game Loop
 	do
 	{
 		ClearScreen();
-		float deltaT = GetDeltaTime();
-		float x, y;
-		if (angle >= 0)
+		
+		if (animTimer <= 0)
 		{
-			/*xPos = xPos + sin(angle) * angle;
-			yPos = yPos + sin(angle + (PI / 2)) * angle;*/
-			x = (xPos +  (radius * cos(angle/radius)));
-			y = yPos + (radius * sin(angle / radius));
-			angle -= 1.0f;
-			angleInRadians = angle * (180 / PI);
-
-			cout << "degrees: " << angle << endl;
-			cout << "radians: " << angleInRadians << endl;
-			/*cout << "xpos: " << x << endl;
-			cout << "ypos: " << y<< endl;*/
-			//system("pause");
+			SetSpriteUVCoordinates(myTextureHandle, 0.0f, (52.0f * count) / 511.0f, 52.0f * ++count / 511.0f, 1.0f);
+			animTimer = timer;
+			count++;
 		}
 		else
 		{
-  			angle = 0.0f;
-			x = 0;
-			y = 0;
+			animTimer -= GetDeltaTime();
 		}
-
-		MoveSprite(myTextureHandle, x, y);
+		MoveSprite(myTextureHandle, xPos, yPos);
 		DrawSprite(myTextureHandle);
 	} while (!FrameworkUpdate());
 
