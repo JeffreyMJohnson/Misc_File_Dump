@@ -1,0 +1,24 @@
+﻿<Window x:Class="WpfApplication1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="768" Width="1024">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="6*"/>
+        </Grid.ColumnDefinitions>
+        <Image x:Name="imageContainer" HorizontalAlignment="Left" Height="174" Margin="223,85,0,0" VerticalAlignment="Top" Width="321" RenderTransformOrigin="0.494,0.707" Grid.Column="1"/>
+        <TextBox x:Name="txtBox" Grid.Column="1" HorizontalAlignment="Left" Height="286" Margin="0,34,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="189"/>
+        <Button x:Name="openFile" Content="Open File" HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top" Width="75" Click="openFile_Click" Drop="openFile_Drop" AllowDrop="True"/>
+        <StackPanel Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="100" Margin="427,259,0,0" VerticalAlignment="Top" Width="100"/>
+        <TreeView x:Name="treeView" RenderTransformOrigin="0.431,0.188" Width="400" Margin="0,37,62,0">
+            <TextBox x:Name="rootNode" Text="SpriteSheet" BorderThickness="0" MouseDown="rootNode_MouseDown" MouseUp="rootNode_MouseUp">
+                <TextBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Add Child Node" Click="AddChild_Click"/>
+                    </ContextMenu>
+                </TextBox.ContextMenu>
+            </TextBox>
+        </TreeView>
+    </Grid>
+</Window>
